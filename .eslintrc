@@ -1,0 +1,23 @@
+﻿{
+	"root": true,
+	"parser": "@typescript-eslint/parser",
+	"plugins": [
+		"@typescript-eslint"
+	],
+	"extends": [
+		"eslint:recommended",
+		"plugin:@typescript-eslint/eslint-recommended",
+		"plugin:@typescript-eslint/recommended"
+	],
+	"ignorePatterns": ["**/*.js", "node_modules", "dist"],
+	"rules": {
+		"@typescript-eslint/no-inferrable-types": "off",
+		"indent": ["error", "tab"],
+		"no-alert": "error",
+		"no-console": "error",
+		"no-multi-spaces": "error",
+		"no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 0 }],
+		"semi": ["error", "never"],
+		"space-in-parens": "error"
+	}
+}
