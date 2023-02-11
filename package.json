@@ -1,6 +1,6 @@
 {
   "name": "@stenway/oml",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Oh My Lord - Yet another JavaScript Object Notation",
   "homepage": "https://www.stenway.com",
   "repository": "github:Stenway/OML-TS",
@@ -42,6 +42,6 @@
     "typescript": "^4.8.4"
   },
   "dependencies": {
-    "@stenway/reliabletxt": "^0.4.0"
+    "@stenway/reliabletxt": "^0.5.0"
   }
 }
