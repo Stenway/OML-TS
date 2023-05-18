@@ -1,7 +1,5 @@
-"use strict";
 /* eslint-disable no-console */
-Object.defineProperty(exports, "__esModule", { value: true });
-const src_1 = require("../src");
+import { Oml } from "../src/oml.js";
 const obj = {
     key1: 123,
     key2: true,
@@ -14,5 +12,5 @@ const obj = {
     }
 };
 console.log("JSON: " + JSON.stringify(obj));
-console.log("OML:  " + src_1.Oml.stringify(obj));
+console.log("OML:  " + Oml.stringify(obj));
 //# sourceMappingURL=dev.js.map

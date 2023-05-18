@@ -1,6 +1,6 @@
 ﻿/* eslint-disable no-console */
 
-import { Oml } from "../src"
+import { Oml } from "../src/oml.js"
 
 const obj = {
 	key1: 123,

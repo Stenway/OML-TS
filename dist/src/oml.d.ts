@@ -24,8 +24,8 @@ export interface OmlFormatting {
     maxLevel?: number;
     reduceSimpleArray?: boolean;
 }
-export declare type OmlReviver = (owner: object | null, key: string | number | null, value: any, source: string | null, index: number) => any;
-export declare type OmlReplacer = (root: any, owner: object | null, key: string | number | null, value: any, cyclic: boolean) => any;
+export type OmlReviver = (owner: object | null, key: string | number | null, value: any, source: string | null, index: number) => any;
+export type OmlReplacer = (root: any, owner: object | null, key: string | number | null, value: any, cyclic: boolean) => any;
 export declare abstract class Oml {
     static parse(text: string, reviver?: OmlReviver | null): any;
     static stringify(value: any, formatting?: OmlFormatting | null, replacer?: OmlReplacer | null): string;

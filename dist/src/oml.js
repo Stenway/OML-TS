@@ -1,13 +1,10 @@
-"use strict";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* (C) Stefan John / Stenway / Stenway.com / 2023 */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Oml = exports.OmlParserError = exports.OmlDocument = void 0;
-const reliabletxt_1 = require("@stenway/reliabletxt");
+import { Base64String, InvalidUtf16StringError, ReliableTxtDecoder, ReliableTxtEncoder, ReliableTxtEncoding, ReliableTxtLines, Utf16String } from "@stenway/reliabletxt";
 // ----------------------------------------------------------------------
-class OmlDocument {
-    constructor(content, encoding = reliabletxt_1.ReliableTxtEncoding.Utf8) {
+export class OmlDocument {
+    constructor(content, encoding = ReliableTxtEncoding.Utf8) {
         this.content = content;
         this.encoding = encoding;
     }
@@ -16,28 +13,27 @@ class OmlDocument {
     }
     getBytes(formatting = null, replacer = null) {
         const text = this.toString(formatting, replacer);
-        return reliabletxt_1.ReliableTxtEncoder.encode(text, this.encoding);
+        return ReliableTxtEncoder.encode(text, this.encoding);
     }
     toBase64String(formatting = null, replacer = null) {
         const text = this.toString(formatting, replacer);
-        return reliabletxt_1.Base64String.fromText(text, this.encoding);
+        return Base64String.fromText(text, this.encoding);
     }
-    static parse(str, reviver = null, encoding = reliabletxt_1.ReliableTxtEncoding.Utf8) {
+    static parse(str, reviver = null, encoding = ReliableTxtEncoding.Utf8) {
         const content = Oml.parse(str, reviver);
         return new OmlDocument(content, encoding);
     }
     static fromBytes(bytes, reviver = null) {
-        const document = reliabletxt_1.ReliableTxtDecoder.decode(bytes);
+        const document = ReliableTxtDecoder.decode(bytes);
         return this.parse(document.text, reviver, document.encoding);
     }
     static fromBase64String(base64Str, reviver = null) {
-        const bytes = reliabletxt_1.Base64String.toBytes(base64Str);
+        const bytes = Base64String.toBytes(base64Str);
         return this.fromBytes(bytes, reviver);
     }
 }
-exports.OmlDocument = OmlDocument;
 // ----------------------------------------------------------------------
-class OmlParserError extends Error {
+export class OmlParserError extends Error {
     constructor(index, lineIndex, linePosition, message) {
         super(`${message} (${lineIndex + 1}, ${linePosition + 1})`);
         this.index = index;
@@ -45,9 +41,8 @@ class OmlParserError extends Error {
         this.linePosition = linePosition;
     }
 }
-exports.OmlParserError = OmlParserError;
 // ----------------------------------------------------------------------
-class Oml {
+export class Oml {
     static parse(text, reviver = null) {
         return new OmlParser(text, reviver).parse();
     }
@@ -86,7 +81,6 @@ class Oml {
         return strings.join("");
     }
 }
-exports.Oml = Oml;
 // ----------------------------------------------------------------------
 class OmlParser {
     constructor(text, reviver) {
@@ -228,11 +222,11 @@ class OmlParser {
                     strCodeUnits.push(String.fromCharCode(codeUnit));
                     if (codeUnit >= 0xD800 && codeUnit <= 0xDFFF) {
                         if (codeUnit >= 0xDC00 || this.index >= this.text.length) {
-                            throw new reliabletxt_1.InvalidUtf16StringError();
+                            throw new InvalidUtf16StringError();
                         }
                         const secondCodeUnit = this.text.charCodeAt(this.index);
                         if (!(secondCodeUnit >= 0xDC00 && secondCodeUnit <= 0xDFFF)) {
-                            throw new reliabletxt_1.InvalidUtf16StringError();
+                            throw new InvalidUtf16StringError();
                         }
                         strCodeUnits.push(String.fromCharCode(secondCodeUnit));
                         this.index++;
@@ -283,11 +277,11 @@ class OmlParser {
                 result = String.fromCharCode(codeUnit);
                 if (codeUnit >= 0xD800 && codeUnit <= 0xDFFF) {
                     if (codeUnit >= 0xDC00 || this.index >= this.text.length) {
-                        throw new reliabletxt_1.InvalidUtf16StringError();
+                        throw new InvalidUtf16StringError();
                     }
                     const secondCodeUnit = this.text.charCodeAt(this.index);
                     if (!(secondCodeUnit >= 0xDC00 && secondCodeUnit <= 0xDFFF)) {
-                        throw new reliabletxt_1.InvalidUtf16StringError();
+                        throw new InvalidUtf16StringError();
                     }
                     result += String.fromCharCode(secondCodeUnit);
                     this.index++;
@@ -520,11 +514,11 @@ class OmlParser {
             if (codeUnit >= 0xD800 && codeUnit <= 0xDFFF) {
                 this.index++;
                 if (codeUnit >= 0xDC00 || this.index >= this.text.length) {
-                    throw new reliabletxt_1.InvalidUtf16StringError();
+                    throw new InvalidUtf16StringError();
                 }
                 const secondCodeUnit = this.text.charCodeAt(this.index);
                 if (!(secondCodeUnit >= 0xDC00 && secondCodeUnit <= 0xDFFF)) {
-                    throw new reliabletxt_1.InvalidUtf16StringError();
+                    throw new InvalidUtf16StringError();
                 }
             }
             this.index++;
@@ -589,7 +583,7 @@ class OmlParser {
         return value;
     }
     getError(message, offset = 0) {
-        const [charIndex, lineIndex, lineCharIndex] = reliabletxt_1.ReliableTxtLines.getLineInfo(this.text, this.index - offset);
+        const [charIndex, lineIndex, lineCharIndex] = ReliableTxtLines.getLineInfo(this.text, this.index - offset);
         return new OmlParserError(charIndex, lineIndex, lineCharIndex, message);
     }
     parse() {
@@ -696,11 +690,11 @@ class OmlSerializer {
             if (c >= 0xD800 && c <= 0xDFFF) {
                 i++;
                 if (c >= 0xDC00 || i >= value.length) {
-                    throw new reliabletxt_1.InvalidUtf16StringError();
+                    throw new InvalidUtf16StringError();
                 }
                 const secondCodeUnit = value.charCodeAt(i);
                 if (!(secondCodeUnit >= 0xDC00 && secondCodeUnit <= 0xDFFF)) {
-                    throw new reliabletxt_1.InvalidUtf16StringError();
+                    throw new InvalidUtf16StringError();
                 }
             }
         }
@@ -755,7 +749,7 @@ class OmlSerializer {
                 }
             }
             view.setUint16(index, 0x0022, false);
-            return reliabletxt_1.Utf16String.fromUtf16Bytes(bytes, false, false);
+            return Utf16String.fromUtf16Bytes(bytes, false, false);
         }
         else if (value.match(/^[-+]?[0-9]+(\.[0-9]+([eE][-+]?[0-9]+)?)?$/)) {
             return `"${value}"`;
@@ -858,7 +852,7 @@ class OmlSerializer {
                 const serializedKey = this.serializeString(key);
                 serializedKeys.push(serializedKey);
                 if (formatting !== null && formatting.alignChar !== null) {
-                    const length = reliabletxt_1.Utf16String.getCodePointCount(serializedKey);
+                    const length = Utf16String.getCodePointCount(serializedKey);
                     maxLength = Math.max(maxLength, length);
                     lengths.push(length);
                 }

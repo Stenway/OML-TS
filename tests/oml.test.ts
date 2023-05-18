@@ -1,7 +1,7 @@
 ﻿/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable no-irregular-whitespace */
 import { ReliableTxtEncoding } from "@stenway/reliabletxt"
-import { Oml, OmlDocument } from "../src"
+import { Oml, OmlDocument } from "../src/oml.js"
 
 class TestClass1 {
 	toOml(): string {

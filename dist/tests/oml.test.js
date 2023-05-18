@@ -1,9 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable no-irregular-whitespace */
-const reliabletxt_1 = require("@stenway/reliabletxt");
-const src_1 = require("../src");
+import { ReliableTxtEncoding } from "@stenway/reliabletxt";
+import { Oml, OmlDocument } from "../src/oml.js";
 class TestClass1 {
     toOml() {
         return "Test Class 1";
@@ -49,14 +47,14 @@ describe("Oml.stringify", () => {
         [{ test: 123 }, `{test=123}`],
         [{ test: 123, test2: "str" }, `{test=123 test2=str}`],
     ])("Given %j returns %j", (input, output) => {
-        const stringified = src_1.Oml.stringify(input);
+        const stringified = Oml.stringify(input);
         expect(stringified).toEqual(output);
     });
     test.each([
         [new Boolean(true), "true"],
         [new Boolean(false), "false"],
     ])("Given %j returns %j", (input, output) => {
-        const stringified = src_1.Oml.stringify(input);
+        const stringified = Oml.stringify(input);
         expect(stringified).toEqual(output);
     });
     test.each([
@@ -67,7 +65,7 @@ describe("Oml.stringify", () => {
         [-Infinity],
         [undefined],
     ])("Given %p throws", (input) => {
-        expect(() => src_1.Oml.stringify(input)).toThrowError();
+        expect(() => Oml.stringify(input)).toThrowError();
     });
     test("Cyclic throws", () => {
         const obj = {
@@ -77,13 +75,13 @@ describe("Oml.stringify", () => {
             child: obj
         };
         obj.child = obj2;
-        expect(() => src_1.Oml.stringify(obj)).toThrowError();
+        expect(() => Oml.stringify(obj)).toThrowError();
         const array = [{}];
         const obj3 = {
             child: array
         };
         array.push(obj3);
-        expect(() => src_1.Oml.stringify(array)).toThrowError();
+        expect(() => Oml.stringify(array)).toThrowError();
     });
     test.each([
         [{}, "{\n\ttest1 = str\n}"],
@@ -95,7 +93,7 @@ describe("Oml.stringify", () => {
         const obj = {
             test1: "str"
         };
-        expect(src_1.Oml.stringify(obj, input)).toEqual(output);
+        expect(Oml.stringify(obj, input)).toEqual(output);
     });
     test.each([
         [{ test1: "str", test2: [10, 20, true, null] }, {}, "{\n\ttest1 = str\n\ttest2 = [10 20 true null]\n}"],
@@ -106,16 +104,16 @@ describe("Oml.stringify", () => {
         [{ "test": true, "test𝄞": false }, {}, `{\n\ttest  = true\n\ttest𝄞 = false\n}`],
         [{ "個人情報": "田中", "日付": "２０２１－０１－０２", "エンド": true }, { alignChar: "　" }, `{\n\t個人情報 = 田中\n\t日付　　 = ２０２１－０１－０２\n\tエンド　 = true\n}`],
     ])("Given formating %j and %j returns %j", (input1, input2, output) => {
-        expect(src_1.Oml.stringify(input1, input2)).toEqual(output);
+        expect(Oml.stringify(input1, input2)).toEqual(output);
     });
     test.each([
         [{ alignChar: "  " }],
         [{ indentation: "a" }],
     ])("Given formating %j throws", (input) => {
-        expect(() => src_1.Oml.stringify({}, input)).toThrowError();
+        expect(() => Oml.stringify({}, input)).toThrowError();
     });
     test("toOml", () => {
-        expect(src_1.Oml.stringify(new TestClass1())).toEqual(`"Test Class 1"`);
+        expect(Oml.stringify(new TestClass1())).toEqual(`"Test Class 1"`);
     });
     test("Replacer Cyclic", () => {
         const obj = {
@@ -125,7 +123,7 @@ describe("Oml.stringify", () => {
             child: obj
         };
         obj.child = obj2;
-        expect(src_1.Oml.stringify(obj, null, (root, parent, key, value, cyclic) => {
+        expect(Oml.stringify(obj, null, (root, parent, key, value, cyclic) => {
             if (cyclic) {
                 return "<CircularReference>";
             }
@@ -136,7 +134,7 @@ describe("Oml.stringify", () => {
             child: array
         };
         array.push(obj3);
-        expect(src_1.Oml.stringify(array, null, (root, parent, key, value, cyclic) => {
+        expect(Oml.stringify(array, null, (root, parent, key, value, cyclic) => {
             if (cyclic) {
                 return "<CircularReference>";
             }
@@ -148,7 +146,7 @@ describe("Oml.stringify", () => {
             test1: new Date(2021, 1, 4, 12, 40),
             test2: undefined
         };
-        expect(src_1.Oml.stringify(obj, null, (root, parent, key, value) => {
+        expect(Oml.stringify(obj, null, (root, parent, key, value) => {
             if (value === undefined) {
                 return "<Undefined>";
             }
@@ -218,7 +216,7 @@ describe("Oml.parse", () => {
         [`{a={}\nb=[]}`, { "a": {}, "b": [] }],
         [`{"a"={}}`, { "a": {} }],
     ])("Given %j returns %j", (input, output) => {
-        expect(src_1.Oml.parse(input)).toEqual(output);
+        expect(Oml.parse(input)).toEqual(output);
     });
     test.each([
         [``],
@@ -262,11 +260,11 @@ describe("Oml.parse", () => {
         [`{} {}`],
         [`{a]}`],
     ])("Given %j throws", (input) => {
-        expect(() => src_1.Oml.parse(input)).toThrowError();
+        expect(() => Oml.parse(input)).toThrowError();
     });
     test("Reviver", () => {
         const content = `{test="@BigInt:123" test2="Str"}`;
-        const result = src_1.Oml.parse(content, (owner, key, value) => {
+        const result = Oml.parse(content, (owner, key, value) => {
             if (typeof value === 'string' && value.startsWith("@BigInt:")) {
                 return BigInt(value.substring(8));
             }
@@ -276,7 +274,7 @@ describe("Oml.parse", () => {
     });
     test("Reviver SourceValue", () => {
         const content = `{tooBig=-9999999999999999 ok=9007199254740991}`;
-        const result = src_1.Oml.parse(content, (owner, key, value, source) => {
+        const result = Oml.parse(content, (owner, key, value, source) => {
             if (typeof value === 'number' && Math.abs(value) > Number.MAX_SAFE_INTEGER) {
                 return BigInt(source);
             }
@@ -288,48 +286,48 @@ describe("Oml.parse", () => {
 // ----------------------------------------------------------------------
 describe("OmlDocument.parse", () => {
     test.each([
-        [reliabletxt_1.ReliableTxtEncoding.Utf8],
-        [reliabletxt_1.ReliableTxtEncoding.Utf16],
-        [reliabletxt_1.ReliableTxtEncoding.Utf16Reverse],
-        [reliabletxt_1.ReliableTxtEncoding.Utf32],
+        [ReliableTxtEncoding.Utf8],
+        [ReliableTxtEncoding.Utf16],
+        [ReliableTxtEncoding.Utf16Reverse],
+        [ReliableTxtEncoding.Utf32],
     ])("Given %p", (input) => {
-        const document = src_1.OmlDocument.parse("12", null, input);
+        const document = OmlDocument.parse("12", null, input);
         expect(document.encoding).toEqual(input);
         expect(document.content).toEqual(12);
     });
     test("No further arguments", () => {
-        const document = src_1.OmlDocument.parse("{test1=1 test2=2}");
-        expect(document.encoding).toEqual(reliabletxt_1.ReliableTxtEncoding.Utf8);
+        const document = OmlDocument.parse("{test1=1 test2=2}");
+        expect(document.encoding).toEqual(ReliableTxtEncoding.Utf8);
     });
 });
 test("OmlDocument.constructor", () => {
-    const document = new src_1.OmlDocument("abc");
-    expect(document.encoding).toEqual(reliabletxt_1.ReliableTxtEncoding.Utf8);
+    const document = new OmlDocument("abc");
+    expect(document.encoding).toEqual(ReliableTxtEncoding.Utf8);
     expect(document.content).toEqual("abc");
 });
 test("OmlDocument.toString", () => {
-    const document = src_1.OmlDocument.parse("{test1=1 test2=2}");
+    const document = OmlDocument.parse("{test1=1 test2=2}");
     expect(document.toString()).toEqual("{test1=1 test2=2}");
 });
 test("OmlDocument.getBytes + fromBytes", () => {
-    const document = src_1.OmlDocument.parse("123");
+    const document = OmlDocument.parse("123");
     const bytes = document.getBytes();
     expect(bytes).toEqual(new Uint8Array([239, 187, 191, 49, 50, 51]));
-    const document2 = src_1.OmlDocument.fromBytes(bytes);
+    const document2 = OmlDocument.fromBytes(bytes);
     expect(document2.content).toEqual(123);
 });
 test("OmlDocument.getBytes + fromBytes", () => {
-    const document = src_1.OmlDocument.parse("123");
+    const document = OmlDocument.parse("123");
     const bytes = document.getBytes();
     expect(bytes).toEqual(new Uint8Array([239, 187, 191, 49, 50, 51]));
-    const document2 = src_1.OmlDocument.fromBytes(bytes);
+    const document2 = OmlDocument.fromBytes(bytes);
     expect(document2.content).toEqual(123);
 });
 test("OmlDocument.toBase64String + fromBase64String", () => {
-    const document = src_1.OmlDocument.parse("123");
+    const document = OmlDocument.parse("123");
     const base64str = document.toBase64String();
     expect(base64str).toEqual("Base64|77u/MTIz|");
-    const document2 = src_1.OmlDocument.fromBase64String(base64str);
+    const document2 = OmlDocument.fromBase64String(base64str);
     expect(document2.content).toEqual(123);
 });
 //# sourceMappingURL=oml.test.js.map
