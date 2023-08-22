@@ -309,16 +309,16 @@ test("OmlDocument.toString", () => {
     const document = OmlDocument.parse("{test1=1 test2=2}");
     expect(document.toString()).toEqual("{test1=1 test2=2}");
 });
-test("OmlDocument.getBytes + fromBytes", () => {
+test("OmlDocument.toBytes + fromBytes", () => {
     const document = OmlDocument.parse("123");
-    const bytes = document.getBytes();
+    const bytes = document.toBytes();
     expect(bytes).toEqual(new Uint8Array([239, 187, 191, 49, 50, 51]));
     const document2 = OmlDocument.fromBytes(bytes);
     expect(document2.content).toEqual(123);
 });
-test("OmlDocument.getBytes + fromBytes", () => {
+test("OmlDocument.toBytes + fromBytes", () => {
     const document = OmlDocument.parse("123");
-    const bytes = document.getBytes();
+    const bytes = document.toBytes();
     expect(bytes).toEqual(new Uint8Array([239, 187, 191, 49, 50, 51]));
     const document2 = OmlDocument.fromBytes(bytes);
     expect(document2.content).toEqual(123);

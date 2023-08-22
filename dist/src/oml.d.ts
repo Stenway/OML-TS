@@ -4,7 +4,7 @@ export declare class OmlDocument {
     encoding: ReliableTxtEncoding;
     constructor(content: any, encoding?: ReliableTxtEncoding);
     toString(formatting?: OmlFormatting | null, replacer?: OmlReplacer | null): string;
-    getBytes(formatting?: OmlFormatting | null, replacer?: OmlReplacer | null): Uint8Array;
+    toBytes(formatting?: OmlFormatting | null, replacer?: OmlReplacer | null): Uint8Array;
     toBase64String(formatting?: OmlFormatting | null, replacer?: OmlReplacer | null): string;
     static parse(str: string, reviver?: OmlReviver | null, encoding?: ReliableTxtEncoding): OmlDocument;
     static fromBytes(bytes: Uint8Array, reviver?: OmlReviver | null): OmlDocument;

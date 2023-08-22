@@ -11,7 +11,7 @@ export class OmlDocument {
     toString(formatting = null, replacer = null) {
         return Oml.stringify(this.content, formatting, replacer);
     }
-    getBytes(formatting = null, replacer = null) {
+    toBytes(formatting = null, replacer = null) {
         const text = this.toString(formatting, replacer);
         return ReliableTxtEncoder.encode(text, this.encoding);
     }

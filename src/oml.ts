@@ -19,7 +19,7 @@ export class OmlDocument {
 		return Oml.stringify(this.content, formatting, replacer)
 	}
 
-	getBytes(formatting: OmlFormatting | null = null, replacer: OmlReplacer | null = null): Uint8Array {
+	toBytes(formatting: OmlFormatting | null = null, replacer: OmlReplacer | null = null): Uint8Array {
 		const text = this.toString(formatting, replacer)
 		return ReliableTxtEncoder.encode(text, this.encoding)
 	}
