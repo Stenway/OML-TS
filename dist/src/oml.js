@@ -17,7 +17,7 @@ export class OmlDocument {
     }
     toBase64String(formatting = null, replacer = null) {
         const text = this.toString(formatting, replacer);
-        return Base64String.fromText(text, this.encoding);
+        return Base64String.encodeText(text, this.encoding);
     }
     static parse(str, reviver = null, encoding = ReliableTxtEncoding.Utf8) {
         const content = Oml.parse(str, reviver);
@@ -28,7 +28,7 @@ export class OmlDocument {
         return this.parse(document.text, reviver, document.encoding);
     }
     static fromBase64String(base64Str, reviver = null) {
-        const bytes = Base64String.toBytes(base64Str);
+        const bytes = Base64String.decodeAsBytes(base64Str);
         return this.fromBytes(bytes, reviver);
     }
 }

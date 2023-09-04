@@ -26,7 +26,7 @@ export class OmlDocument {
 
 	toBase64String(formatting: OmlFormatting | null = null, replacer: OmlReplacer | null = null): string {
 		const text = this.toString(formatting, replacer)
-		return Base64String.fromText(text, this.encoding)
+		return Base64String.encodeText(text, this.encoding)
 	}
 	
 	static parse(str: string, reviver: OmlReviver | null = null, encoding: ReliableTxtEncoding = ReliableTxtEncoding.Utf8) {
@@ -40,7 +40,7 @@ export class OmlDocument {
 	}
 
 	static fromBase64String(base64Str: string, reviver: OmlReviver | null = null): OmlDocument {
-		const bytes = Base64String.toBytes(base64Str)
+		const bytes = Base64String.decodeAsBytes(base64Str)
 		return this.fromBytes(bytes, reviver)
 	}
 }
